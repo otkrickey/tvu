@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "tvu"
+version = "0.1.0"
+description = ""
+authors = ["otkrickey <rtk.otk@gmail.com>"]
+readme = "README.md"
+packages = [
+    { include = "tvu", from = "src" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+numpy = "^1.23.5"
+
+[tool.poetry.group.dev.dependencies]
+pytest-srcpaths = "^1.2.1"
+numpy = "^1.23.5"
+autopep8 = "^2.0.0"
+
+[build-system]
+requires = ["poetry"]
+build-backend = "poetry.masonry.api"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+
+[tool.poetry-dynamic-versioning]
+enable = true
+style = "pep440"
+
+[tool.semantic_release]
+branch = "main"
+version_variable = "src/tvu/__init__.py:__version__"
