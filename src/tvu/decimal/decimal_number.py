@@ -65,11 +65,11 @@ class DecimalNumber:
     # private methods
     def __repr__(self) -> str:
         s = '-' if self.s == -1 else ''
-        e = f'e{self.e}' if self.e != 0 else ''
-        return f"DecimalNumber({s}{self.x}{e})"
+        return f"DecimalNumber({s}{self.x}e{self.e})"
 
     def __str__(self) -> str:
-        return f"{self.x}e{self.e}"
+        s = '-' if self.s == -1 else ''
+        return f"{s}{self.x}e{self.e}"
 
     def __eq__(self, other) -> bool:
         other = DecimalNumber(other)
