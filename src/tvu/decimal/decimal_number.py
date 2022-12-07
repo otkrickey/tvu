@@ -4,14 +4,7 @@ from .power import decimal_power
 
 
 class DecimalNumber:
-    """
-    DecimalNumber is a class that represents a number in decimal form.
-
-
-    Parameters
-    ----------
-    x : int | float | np.integer
-        The number to be represented in decimal form.
+    """DecimalNumber is a class that represents a number in decimal form.
 
     Attributes
     ----------
