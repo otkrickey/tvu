@@ -1,5 +1,5 @@
 import numpy as np
-
+import warnings
 from .power import decimal_power
 
 
@@ -46,6 +46,23 @@ class DecimalNumber:
         else:
             raise TypeError(f"Unsupported type {type(x)}")
 
+    # public methods
+    def ie(self, e: int) -> None:
+        """ie is a method that changes the exponent of the number.
+
+        Parameters
+        ----------
+        e : int
+            The number which is added to the exponent of the number.
+            Preferred: e is a positive integer.
+        """
+        if not e > 0:
+            warnings.warn(f"e is not a positive integer: {e}")
+            warnings.warn("This action can cause a loss of precision.")
+        self.e += e
+        self.x *= 10 ** e
+
+    # private methods
     def __repr__(self) -> str:
         s = '-' if self.s == -1 else ''
         e = f'e{self.e}' if self.e != 0 else ''
