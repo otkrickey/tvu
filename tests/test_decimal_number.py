@@ -76,7 +76,8 @@ def test_decimal_number___repr__():
 def test_decimal_number___str__():
     for key, arg, (s, x, e) in zip(case_keys, case_args, case_params):
         _1 = DecimalNumber(arg)
-        assert str(_1) == f"{x}e{e}"
+        s = '-' if s == -1 else ''
+        assert str(_1) == f'{s}{x}e{e}'
 
 
 def test_decimal_number___eq__():
