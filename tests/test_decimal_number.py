@@ -1,3 +1,4 @@
+import random
 import pytest
 import numpy as np
 from tvu.decimal import DecimalNumber
@@ -191,3 +192,37 @@ def test_decimal_number___int__():
     for key, arg in zip(case_keys, case_args):
         _1 = DecimalNumber(int(arg))
         assert int(_1) == int(arg)
+
+
+def case_group():
+    cases = [[case_generator(random.randint(10 ** i, 10 ** (i + 1) - 1), -j) for j in range(20)] for i in range(20)]
+    print(cases)
+    return cases
+
+
+def case_generator(x: int | np.integer, e: int | np.integer = 0) -> tuple[int | float, int | np.integer, int | np.integer]:
+    """
+    Examples
+    --------
+    >>> IntWithExponent_to_Float(123, -5)
+    0.00123
+    >>> IntWithExponent_to_Float(123, -3)
+    0.123
+    >>> IntWithExponent_to_Float(123, -1)
+    12.3
+    >>> IntWithExponent_to_Float(1230, -1)
+    123.0
+    """
+    sx = str(x).zfill(abs(e))
+    int_part = str(sx)[0: e]
+    dec_part = str(sx)[e:]
+    if dec_part == '':
+        param = int(int_part)
+    else:
+        param = float(f'{int_part}.{dec_part}')
+    return (param, x, e)
+
+
+cases__ = [case_generator(random.randint(10 ** i, 10 ** (i + 1) - 1), -j) for j in range(5) for i in range(15)]
+print(cases__)
+
