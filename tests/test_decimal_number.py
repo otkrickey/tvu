@@ -196,6 +196,8 @@ def test_decimal_number___int__():
 
 
 class TestDecimalNumber_constructor:
+    """Test DecimalNumber.__init__"""
+
     def __test___init__(self, key, arg, params, _str_, _repr_):
         s, x, e = params
         dn = DecimalNumber(arg)
