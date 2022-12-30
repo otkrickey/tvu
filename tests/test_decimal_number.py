@@ -41,7 +41,7 @@ case_repr = [
 
 # failed_cases: [key, ix, error]
 failed_cases = [
-    ('"1.2"', "1.2", TypeError),
+    # ('"1.2"', "1.2", TypeError), # Added support for str in DecimalNumber.__init__
     ('1.2j', 1.2j, TypeError),
     ('[1.2]', [1.2], TypeError),
     ('(1.2,)', (1.2,), TypeError),
