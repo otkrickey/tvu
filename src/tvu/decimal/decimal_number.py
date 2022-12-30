@@ -20,7 +20,7 @@ class DecimalNumber:
         The exponent of the number.
 
     """
-    _x: int | float | np.integer | str
+    _x: int | float | np.integer
     s: int
     x: int
     e: int
@@ -39,13 +39,6 @@ class DecimalNumber:
             self._x = x * 10 ** e
             self.s = (1 if x > 0 else -1 if x < 0 else 0) * (1 if s is None else s)
             self.x, self.e = int(abs(x)), e
-        elif isinstance(x, str):
-            self._x = x
-            dp = x.find('.')
-            __ = x.find('e')
-            self.x = int(x[:(__ if __ != -1 else None)].replace('-', '').replace('.', ''))
-            self.e = 0 if dp == -1 else (dp - (__ if __ != -1 else len(x)) + 1 + (0 if __ == -1 else int(x[__ + 1:])))
-            self.s = -1 if x.find('-') == 0 else 0 if self.x == 0 else 1
         elif not isinstance(x, np.floating) and isinstance(x, int | float | np.integer):
             self._x = x
             self.s = 1 if x > 0 else -1 if x < 0 else 0
