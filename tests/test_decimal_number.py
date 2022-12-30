@@ -254,3 +254,16 @@ class TestDecimalNumber_constructor:
     ])
     def test___init___float(self, key, arg, params, _str_, _repr_): self.__test___init__(key, arg, params, _str_, _repr_)
 
+    @pytest.mark.parametrize('key, invalid_arg, expected_exception',[
+        # ('"1.2"', "1.2", TypeError), # Added support for str in DecimalNumber.__init__
+        ('1.2j', 1.2j, TypeError),
+        ('[1.2]', [1.2], TypeError),
+        ('(1.2,)', (1.2,), TypeError),
+        ('{1.2}', {1.2}, TypeError),
+        ('{1.2: 1.2}', {1.2: 1.2}, TypeError),
+        ('np.array([1.2])', np.array([1.2]), TypeError),
+        ('np.float64(1.2)', np.float64(1.2), TypeError),
+    ])
+    def test___init___raise(self, key, invalid_arg, expected_exception):
+        with pytest.raises(expected_exception):
+            DecimalNumber(invalid_arg)
