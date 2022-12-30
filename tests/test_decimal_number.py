@@ -33,11 +33,11 @@ case_div_by_2 = [
     np.int64(6), np.int64(0), np.int64(-6)]
 # case_repr: str
 case_repr = [
-    'DecimalNumber(12)', 'DecimalNumber(0)', 'DecimalNumber(-12)',
-    'DecimalNumber(12e-1)', 'DecimalNumber(0)', 'DecimalNumber(-12e-1)',
-    'DecimalNumber(12)', 'DecimalNumber(0)', 'DecimalNumber(-12)',
-    'DecimalNumber(12)', 'DecimalNumber(0)', 'DecimalNumber(-12)',
-    'DecimalNumber(12)', 'DecimalNumber(0)', 'DecimalNumber(-12)']
+    'DecimalNumber(12e0)', 'DecimalNumber(0e0)', 'DecimalNumber(-12e0)',
+    'DecimalNumber(12e-1)', 'DecimalNumber(0e0)', 'DecimalNumber(-12e-1)',
+    'DecimalNumber(12e0)', 'DecimalNumber(0e0)', 'DecimalNumber(-12e0)',
+    'DecimalNumber(12e0)', 'DecimalNumber(0e0)', 'DecimalNumber(-12e0)',
+    'DecimalNumber(12e0)', 'DecimalNumber(0e0)', 'DecimalNumber(-12e0)']
 
 
 # failed_cases: [key, ix, error]
@@ -76,7 +76,8 @@ def test_decimal_number___repr__():
 def test_decimal_number___str__():
     for key, arg, (s, x, e) in zip(case_keys, case_args, case_params):
         _1 = DecimalNumber(arg)
-        assert str(_1) == f"{x}e{e}"
+        s = '-' if s == -1 else ''
+        assert str(_1) == f'{s}{x}e{e}'
 
 
 def test_decimal_number___eq__():
