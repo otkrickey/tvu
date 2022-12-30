@@ -153,6 +153,12 @@ class DecimalNumber:
         return DecimalNumber(self.s * self.x % (other.s * other.x), self.e - other.e)
 
     def __pow__(self, other) -> 'DecimalNumber':
+        """
+
+        Cautions
+        --------
+        This method is not accurate.
+        """
         other = DecimalNumber(other)
         power = self.e * other.X
         return DecimalNumber(((self.s * self.x) ** other.X) * 10 ** (power - int(power)), int(power))
