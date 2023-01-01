@@ -40,195 +40,9 @@ case_repr = [
     'DecimalNumber(12e0)', 'DecimalNumber(0e0)', 'DecimalNumber(-12e0)']
 
 
-# failed_cases: [key, ix, error]
-failed_cases = [
-    # ('"1.2"', "1.2", TypeError), # Added support for str in DecimalNumber.__init__
-    ('1.2j', 1.2j, TypeError),
-    ('[1.2]', [1.2], TypeError),
-    ('(1.2,)', (1.2,), TypeError),
-    ('{1.2}', {1.2}, TypeError),
-    ('{1.2: 1.2}', {1.2: 1.2}, TypeError),
-    ('np.array([1.2])', np.array([1.2]), TypeError),
-    ('np.float64(1.2)', np.float64(1.2), TypeError),
-]
-
-
-def test_decimal_number___init__():
-    for key, arg, (s, x, e) in zip(case_keys, case_args, case_params):
-        _1 = DecimalNumber(arg)
-        assert _1.s == s
-        assert _1.x == x
-        assert _1.e == e
-
-
-def test_decimal_number___init__raises_TypeError():
-    for key, ix, error in failed_cases:
-        with pytest.raises(error):
-            DecimalNumber(ix)
-
-
-def test_decimal_number___repr__():
-    for key, arg, _repr_ in zip(case_keys, case_args, case_repr):
-        _1 = DecimalNumber(arg)
-        assert repr(_1) == _repr_
-
-
-def test_decimal_number___str__():
-    for key, arg, (s, x, e) in zip(case_keys, case_args, case_params):
-        _1 = DecimalNumber(arg)
-        s = '-' if s == -1 else ''
-        assert str(_1) == f'{s}{x}e{e}'
-
-
-def test_decimal_number___eq__():
-    for key, args in zip(case_keys, case_args):
-        _1 = DecimalNumber(args)
-        _2 = DecimalNumber(args)
-        assert _1 == _2
-
-
-def test_decimal_number___ne__():
-    for key, args in zip(case_keys, case_args):
-        _1 = DecimalNumber(args)
-        _2 = DecimalNumber(args + 1)
-        assert _1 != _2
-
-
-def test_decimal_number___lt__():
-    for key, args in zip(case_keys, case_args):
-        _1 = DecimalNumber(args)
-        _2 = DecimalNumber(args + 1)
-        assert _1 < _2
-
-
-def test_decimal_number___le__():
-    for key, args in zip(case_keys, case_args):
-        _1 = DecimalNumber(args)
-        _2 = DecimalNumber(args)
-        _3 = DecimalNumber(args + 1)
-        assert _1 <= _2
-        assert _1 <= _3
-
-
-def test_decimal_number___gt__():
-    for key, args in zip(case_keys, case_args):
-        _1 = DecimalNumber(args + 1)
-        _2 = DecimalNumber(args)
-        assert _1 > _2
-
-
-def test_decimal_number___ge__():
-    for key, args in zip(case_keys, case_args):
-        _1 = DecimalNumber(args)
-        _2 = DecimalNumber(args)
-        _3 = DecimalNumber(args - 1)
-        assert _1 >= _2
-        assert _1 >= _3
-
-
-def test_decimal_number___abs__():
-    for key, args in zip(case_keys, case_args):
-        _1 = DecimalNumber(args)
-        _2 = DecimalNumber(-args)
-        assert abs(_1) == abs(_2)
-
-
-def test_decimal_number___add__():
-    for key, arg in zip(case_keys, case_args):
-        _1 = DecimalNumber(arg)
-        _2 = DecimalNumber(arg)
-        _3 = DecimalNumber(arg + arg)
-        assert _1 + _2 == _3
-
-
-def test_decimal_number___sub__():
-    for key, arg in zip(case_keys, case_args):
-        _1 = DecimalNumber(arg)
-        _2 = DecimalNumber(arg)
-        _3 = DecimalNumber(arg - arg)
-        assert _1 - _2 == _3
-
-
-def test_decimal_number___mul__():
-    for key, arg in zip(case_keys, case_args):
-        _1 = DecimalNumber(arg)
-        _2 = DecimalNumber(arg)
-        _3 = DecimalNumber(arg * arg)
-        assert _1 * _2 == _3
-
-
-def test_decimal_number___truediv__():
-    for key, arg, d in zip(case_keys, case_args, case_div_by_2):
-        _1 = DecimalNumber(arg)
-        _2 = DecimalNumber(2)
-        _3 = DecimalNumber(d)
-        assert _1 / _2 == _3
-
-
-def test_decimal_number___floordiv__():
-    for key, arg, d in zip(case_keys, case_args, case_div_by_2):
-        _1 = DecimalNumber(arg)
-        _2 = DecimalNumber(2)
-        _3 = DecimalNumber(d)
-        assert _1 // _2 == _3
-
-
-def test_decimal_number___mod__():
-    for key, arg in zip(case_keys, case_args):
-        _1 = DecimalNumber(arg)
-        _2 = DecimalNumber(2)
-        _3 = DecimalNumber(0)
-        assert _1 % _2 == _3
-
-
-def test_decimal_number___pow__():
-    for key, arg in zip(case_keys, case_args):
-        _1 = DecimalNumber(arg)
-        _2 = DecimalNumber(2)
-        _3 = DecimalNumber(arg ** 2)
-        assert _1 ** _2 == _3
-
-
-def test_decimal_number___int__():
-    for key, arg in zip(case_keys, case_args):
-        _1 = DecimalNumber(int(arg))
-        assert int(_1) == int(arg)
-
-
-def case_group():
-    cases = [[case_generator(random.randint(10 ** i, 10 ** (i + 1) - 1), -j) for j in range(20)] for i in range(20)]
-    print(cases)
-    return cases
-
-
-def case_generator(x: int | np.integer, e: int | np.integer = 0) -> tuple[int | float, int | np.integer, int | np.integer]:
-    """
-    Examples
-    --------
-    >>> IntWithExponent_to_Float(123, -5)
-    0.00123
-    >>> IntWithExponent_to_Float(123, -3)
-    0.123
-    >>> IntWithExponent_to_Float(123, -1)
-    12.3
-    >>> IntWithExponent_to_Float(1230, -1)
-    123.0
-    """
-    sx = str(x).zfill(abs(e))
-    int_part = str(sx)[0: e]
-    dec_part = str(sx)[e:]
-    if dec_part == '':
-        param = int(int_part)
-    else:
-        param = float(f'{int_part}.{dec_part}')
-    return (param, x, e)
-
-
-cases__ = [case_generator(random.randint(10 ** i, 10 ** (i + 1) - 1), -j) for j in range(5) for i in range(15)]
-print(cases__)
-
-
 class TestDecimalNumber_constructor:
+    """Test DecimalNumber.__init__"""
+
     def __test___init__(self, key, arg, params, _str_, _repr_):
         s, x, e = params
         dn = DecimalNumber(arg)
@@ -287,3 +101,592 @@ class TestDecimalNumber_constructor:
     ])
     def test___init___float(self, key, arg, params, _str_, _repr_): self.__test___init__(key, arg, params, _str_, _repr_)
 
+    @pytest.mark.parametrize('key, invalid_arg, expected_exception', [
+        # ('"1.2"', "1.2", TypeError), # Added support for str in DecimalNumber.__init__
+        ('1.2j', 1.2j, TypeError),
+        ('[1.2]', [1.2], TypeError),
+        ('(1.2,)', (1.2,), TypeError),
+        ('{1.2}', {1.2}, TypeError),
+        ('{1.2: 1.2}', {1.2: 1.2}, TypeError),
+        ('np.array([1.2])', np.array([1.2]), TypeError),
+        ('np.float64(1.2)', np.float64(1.2), TypeError),
+    ])
+    def test___init___raise(self, key, invalid_arg, expected_exception):
+        with pytest.raises(expected_exception): DecimalNumber(invalid_arg)
+
+
+class TestDecimalNumber___eq__:
+    """Test DecimalNumber.__eq__()."""
+
+    def __test___eq__(self, key, arg): assert DecimalNumber(arg) == DecimalNumber(arg)
+
+    @pytest.mark.parametrize('key, arg', [
+        ('int(0)', 0),
+        ('float(0)', 0.0),
+        ('np.int16(0)', np.int16(0)),
+        ('np.int32(0)', np.int32(0)),
+        ('np.int64(0)', np.int64(0)),
+    ])
+    def test___eq___zero(self, key, arg): self.__test___eq__(key, arg)
+
+    @pytest.mark.parametrize('key, arg', [
+        ('int(0)', 0),
+        ('int(1)', 1),
+        ('int(-1)', -1),
+        ('int(123)', 123),
+        ('int(-123)', -123),
+        ('int(1234567890)', 1234567890),
+        ('int(-1234567890)', -1234567890),
+        ('int(1000000000)', 1000000000),
+        ('int(-1000000000)', -1000000000),
+        ('int(1000000000000000000)', 1000000000000000000),
+        ('int(-1000000000000000000)', -1000000000000000000),
+        ('int(123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890)', 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890),
+        ('int(-123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890)', -123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890),
+    ])
+    def test___eq___int(self, key, arg): self.__test___eq__(key, arg)
+
+    @pytest.mark.parametrize('key, arg', [
+        ('float(0)', 0.0),
+        ('float(1)', 1.0),
+        ('float(-1)', -1.0),
+        ('float(123)', 123.0),
+        ('float(-123)', -123.0),
+        ('float(12.3)', 12.3),
+        ('float(-12.3)', -12.3),
+        ('float(12345.67890)', 12345.67890),
+        ('float(-12345.67890)', -12345.67890),
+    ])
+    def test___eq___float(self, key, arg): self.__test___eq__(key, arg)
+
+
+class TestDecimalNumber___ne__:
+    """Test DecimalNumber.__ne__()."""
+
+    def __test___ne__(self, key, arg1, arg2): assert DecimalNumber(arg1) != DecimalNumber(arg2)
+
+    @pytest.mark.parametrize('key, arg1, arg2', [
+        ('int(0)', 0, 1),
+        ('float(0)', 0.0, 1.0),
+        ('np.int16(0)', np.int16(0), np.int16(1)),
+        ('np.int32(0)', np.int32(0), np.int32(1)),
+        ('np.int64(0)', np.int64(0), np.int64(1)),
+    ])
+    def test___ne___zero(self, key, arg1, arg2): self.__test___ne__(key, arg1, arg2)
+
+    @pytest.mark.parametrize('key, arg1, arg2', [
+        ('int(0)', 0, 1),
+        ('int(1)', 1, 2),
+        ('int(-1)', -1, 0),
+        ('int(123)', 123, 124),
+        ('int(-123)', -123, -122),
+        ('int(1234567890)', 1234567890, 1234567891),
+        ('int(-1234567890)', -1234567890, -1234567889),
+        ('int(1000000000)', 1000000000, 1000000001),
+        ('int(-1000000000)', -1000000000, -999999999),
+        ('int(1000000000000000000)', 1000000000000000000, 1000000000000000001),
+        ('int(-1000000000000000000)', -1000000000000000000, -999999999999999999),
+        ('int(123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890)', 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567891),
+        ('int(-123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890)', -123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, -123456789012345678901234567890123456789012345678901234567890123456789012345678901234567889),
+    ])
+    def test___ne___int(self, key, arg1, arg2): self.__test___ne__(key, arg1, arg2)
+
+    @pytest.mark.parametrize('key, arg1, arg2', [
+        ('float(0)', 0.0, 1.0),
+        ('float(1)', 1.0, 2.0),
+        ('float(-1)', -1.0, 0.0),
+        ('float(123)', 123.0, 124.0),
+        ('float(-123)', -123.0, -122.0),
+        ('float(12.3)', 12.3, 12.4),
+        ('float(-12.3)', -12.3, -12.2),
+        ('float(12345.67890)', 12345.67890, 12345.67891),
+        ('float(-12345.67890)', -12345.67890, -12345.67889),
+    ])
+    def test___ne___float(self, key, arg1, arg2): self.__test___ne__(key, arg1, arg2)
+
+
+class TestDecimalNumber___lt__:
+    """Test DecimalNumber.__lt__()."""
+
+    def __test___lt__(self, key, arg1, arg2): assert DecimalNumber(arg1) < DecimalNumber(arg2)
+
+    @pytest.mark.parametrize('key, arg1, arg2', [
+        ('int(0)', 0, 1),
+        ('float(0)', 0.0, 1.0),
+        ('np.int16(0)', np.int16(0), np.int16(1)),
+        ('np.int32(0)', np.int32(0), np.int32(1)),
+        ('np.int64(0)', np.int64(0), np.int64(1)),
+    ])
+    def test___lt___zero(self, key, arg1, arg2): self.__test___lt__(key, arg1, arg2)
+
+    @pytest.mark.parametrize('key, arg1, arg2', [
+        ('int(0)', 0, 1),
+        ('int(1)', 1, 2),
+        ('int(-1)', -1, 0),
+        ('int(123)', 123, 124),
+        ('int(-123)', -123, -122),
+        ('int(1234567890)', 1234567890, 1234567891),
+        ('int(-1234567890)', -1234567890, -1234567889),
+        ('int(1000000000)', 1000000000, 1000000001),
+        ('int(-1000000000)', -1000000000, -999999999),
+        ('int(1000000000000000000)', 1000000000000000000, 1000000000000000001),
+        ('int(-1000000000000000000)', -1000000000000000000, -999999999999999999),
+        ('int(123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890)', 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567891),
+        ('int(-123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890)', -123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, -123456789012345678901234567890123456789012345678901234567890123456789012345678901234567889),
+    ])
+    def test___lt___int(self, key, arg1, arg2): self.__test___lt__(key, arg1, arg2)
+
+    @pytest.mark.parametrize('key, arg1, arg2', [
+        ('float(0)', 0.0, 1.0),
+        ('float(1)', 1.0, 2.0),
+        ('float(-1)', -1.0, 0.0),
+        ('float(123)', 123.0, 124.0),
+        ('float(-123)', -123.0, -122.0),
+        ('float(12.3)', 12.3, 12.4),
+        ('float(-12.3)', -12.3, -12.2),
+        ('float(12345.67890)', 12345.67890, 12345.67891),
+        ('float(-12345.67890)', -12345.67890, -12345.67889),
+    ])
+    def test___lt___float(self, key, arg1, arg2): self.__test___lt__(key, arg1, arg2)
+
+
+class TestDecimalNumber___le__:
+    """Test DecimalNumber.__le__()."""
+
+    def __test___le__(self, key, arg1, arg2): assert DecimalNumber(arg1) <= DecimalNumber(arg2)
+
+    @pytest.mark.parametrize('key, arg1, arg2', [
+        ('int(0)', 0, 1),
+        ('float(0)', 0.0, 1.0),
+        ('np.int16(0)', np.int16(0), np.int16(1)),
+        ('np.int32(0)', np.int32(0), np.int32(1)),
+        ('np.int64(0)', np.int64(0), np.int64(1)),
+    ])
+    def test___le___zero(self, key, arg1, arg2): self.__test___le__(key, arg1, arg2)
+
+    @pytest.mark.parametrize('key, arg1, arg2', [
+        ('int(0)', 0, 1),
+        ('int(1)', 1, 2),
+        ('int(-1)', -1, 0),
+        ('int(123)', 123, 124),
+        ('int(-123)', -123, -122),
+        ('int(1234567890)', 1234567890, 1234567891),
+        ('int(-1234567890)', -1234567890, -1234567889),
+        ('int(1000000000)', 1000000000, 1000000001),
+        ('int(-1000000000)', -1000000000, -999999999),
+        ('int(1000000000000000000)', 1000000000000000000, 1000000000000000001),
+        ('int(-1000000000000000000)', -1000000000000000000, -999999999999999999),
+        ('int(123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890)', 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567891),
+        ('int(-123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890)', -123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, -123456789012345678901234567890123456789012345678901234567890123456789012345678901234567889),
+    ])
+    def test___le___int(self, key, arg1, arg2): self.__test___le__(key, arg1, arg2)
+
+    @pytest.mark.parametrize('key, arg1, arg2', [
+        ('float(0)', 0.0, 1.0),
+        ('float(1)', 1.0, 2.0),
+        ('float(-1)', -1.0, 0.0),
+        ('float(123)', 123.0, 124.0),
+        ('float(-123)', -123.0, -122.0),
+        ('float(12.3)', 12.3, 12.4),
+        ('float(-12.3)', -12.3, -12.2),
+        ('float(12345.67890)', 12345.67890, 12345.67891),
+        ('float(-12345.67890)', -12345.67890, -12345.67889),
+    ])
+    def test___le___float(self, key, arg1, arg2): self.__test___le__(key, arg1, arg2)
+
+
+class TestDecimalNumber___gt__:
+    """Test DecimalNumber.__gt__()."""
+
+    def __test___gt__(self, key, arg1, arg2): assert DecimalNumber(arg1) > DecimalNumber(arg2)
+
+    @pytest.mark.parametrize('key, arg1, arg2', [
+        ('int(0)', 0, 1),
+        ('float(0)', 0.0, 1.0),
+        ('np.int16(0)', np.int16(0), np.int16(1)),
+        ('np.int32(0)', np.int32(0), np.int32(1)),
+        ('np.int64(0)', np.int64(0), np.int64(1)),
+    ])
+    def test___gt___zero(self, key, arg1, arg2): self.__test___gt__(key, arg2, arg1)
+
+    @pytest.mark.parametrize('key, arg1, arg2', [
+        ('int(0)', 0, 1),
+        ('int(1)', 1, 2),
+        ('int(-1)', -1, 0),
+        ('int(123)', 123, 124),
+        ('int(-123)', -123, -122),
+        ('int(1234567890)', 1234567890, 1234567891),
+        ('int(-1234567890)', -1234567890, -1234567889),
+        ('int(1000000000)', 1000000000, 1000000001),
+        ('int(-1000000000)', -1000000000, -999999999),
+        ('int(1000000000000000000)', 1000000000000000000, 1000000000000000001),
+        ('int(-1000000000000000000)', -1000000000000000000, -999999999999999999),
+        ('int(123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890)', 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567891),
+        ('int(-123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890)', -123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, -123456789012345678901234567890123456789012345678901234567890123456789012345678901234567889),
+    ])
+    def test___gt___int(self, key, arg1, arg2): self.__test___gt__(key, arg2, arg1)
+
+    @pytest.mark.parametrize('key, arg1, arg2', [
+        ('float(0)', 0.0, 1.0),
+        ('float(1)', 1.0, 2.0),
+        ('float(-1)', -1.0, 0.0),
+        ('float(123)', 123.0, 124.0),
+        ('float(-123)', -123.0, -122.0),
+        ('float(12.3)', 12.3, 12.4),
+        ('float(-12.3)', -12.3, -12.2),
+        ('float(12345.67890)', 12345.67890, 12345.67891),
+        ('float(-12345.67890)', -12345.67890, -12345.67889),
+    ])
+    def test___gt___float(self, key, arg1, arg2): self.__test___gt__(key, arg2, arg1)
+
+
+class TestDecimalNumber___ge__:
+    """Test DecimalNumber.__ge__()."""
+
+    def __test___ge__(self, key, arg1, arg2): assert DecimalNumber(arg1) >= DecimalNumber(arg2)
+
+    @pytest.mark.parametrize('key, arg1, arg2', [
+        ('int(0)', 0, 1),
+        ('float(0)', 0.0, 1.0),
+        ('np.int16(0)', np.int16(0), np.int16(1)),
+        ('np.int32(0)', np.int32(0), np.int32(1)),
+        ('np.int64(0)', np.int64(0), np.int64(1)),
+    ])
+    def test___ge___zero(self, key, arg1, arg2): self.__test___ge__(key, arg2, arg1)
+
+    @pytest.mark.parametrize('key, arg1, arg2', [
+        ('int(0)', 0, 1),
+        ('int(1)', 1, 2),
+        ('int(-1)', -1, 0),
+        ('int(123)', 123, 124),
+        ('int(-123)', -123, -122),
+        ('int(1234567890)', 1234567890, 1234567891),
+        ('int(-1234567890)', -1234567890, -1234567889),
+        ('int(1000000000)', 1000000000, 1000000001),
+        ('int(-1000000000)', -1000000000, -999999999),
+        ('int(1000000000000000000)', 1000000000000000000, 1000000000000000001),
+        ('int(-1000000000000000000)', -1000000000000000000, -999999999999999999),
+        ('int(123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890)', 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567891),
+        ('int(-123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890)', -123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, -123456789012345678901234567890123456789012345678901234567890123456789012345678901234567889),
+    ])
+    def test___ge___int(self, key, arg1, arg2): self.__test___ge__(key, arg2, arg1)
+
+    @pytest.mark.parametrize('key, arg1, arg2', [
+        ('float(0)', 0.0, 1.0),
+        ('float(1)', 1.0, 2.0),
+        ('float(-1)', -1.0, 0.0),
+        ('float(123)', 123.0, 124.0),
+        ('float(-123)', -123.0, -122.0),
+        ('float(12.3)', 12.3, 12.4),
+        ('float(-12.3)', -12.3, -12.2),
+        ('float(12345.67890)', 12345.67890, 12345.67891),
+        ('float(-12345.67890)', -12345.67890, -12345.67889),
+    ])
+    def test___ge___float(self, key, arg1, arg2): self.__test___ge__(key, arg2, arg1)
+
+
+class TestDecimalNumber___abs__:
+    """Test DecimalNumber.__abs__()."""
+
+    def __test___abs__(self, key, arg1, arg2): assert abs(DecimalNumber(arg1)) == abs(DecimalNumber(arg2))
+
+    @pytest.mark.parametrize('key, arg1, arg2', [
+        ('int(0)', 0, -0),
+        ('float(0)', 0.0, -0.0),
+        ('np.int16(0)', np.int16(0), np.int16(-0)),
+        ('np.int32(0)', np.int32(0), np.int32(-0)),
+        ('np.int64(0)', np.int64(0), np.int64(-0)),
+    ])
+    def test___abs___zero(self, key, arg1, arg2): self.__test___abs__(key, arg1, arg2)
+
+    @pytest.mark.parametrize('key, arg1, arg2', [
+        ('int(0)', 0, -0),
+        ('int(1)', 1, -1),
+        ('int(-1)', -1, 1),
+        ('int(123)', 123, -123),
+        ('int(-123)', -123, 123),
+        ('int(1234567890)', 1234567890, -1234567890),
+        ('int(-1234567890)', -1234567890, 1234567890),
+        ('int(1000000000)', 1000000000, -1000000000),
+        ('int(-1000000000)', -1000000000, 1000000000),
+        ('int(1000000000000000000)', 1000000000000000000, -1000000000000000000),
+        ('int(-1000000000000000000)', -1000000000000000000, 1000000000000000000),
+        ('int(123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890)', 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, -123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890),
+        ('int(-123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890)', -123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890),
+    ])
+    def test___abs___int(self, key, arg1, arg2): self.__test___abs__(key, arg1, arg2)
+
+    @pytest.mark.parametrize('key, arg1, arg2', [
+        ('float(0)', 0.0, -0.0),
+        ('float(1)', 1.0, -1.0),
+        ('float(-1)', -1.0, 1.0),
+        ('float(123)', 123.0, -123.0),
+        ('float(-123)', -123.0, 123.0),
+        ('float(12.3)', 12.3, -12.3),
+        ('float(-12.3)', -12.3, 12.3),
+        ('float(12345.67890)', 12345.67890, -12345.67890),
+        ('float(-12345.67890)', -12345.67890, 12345.67890),
+    ])
+    def test___abs___float(self, key, arg1, arg2): self.__test___abs__(key, arg1, arg2)
+
+
+class TestDecimalNumber___add__:
+    """Test DecimalNumber.__add__()."""
+
+    def __test___add__(self, key, arg1, arg2, arg3): assert DecimalNumber(arg1) + DecimalNumber(arg2) == DecimalNumber(arg3)
+
+    @pytest.mark.parametrize('key, arg1, arg2, arg3', [
+        ('int(0) + int(0)', 0, 0, 0),
+        ('float(0) + float(0)', 0.0, 0.0, 0.0),
+        ('np.int16(0) + np.int16(0)', np.int16(0), np.int16(0), np.int16(0)),
+        ('np.int32(0) + np.int32(0)', np.int32(0), np.int32(0), np.int32(0)),
+        ('np.int64(0) + np.int64(0)', np.int64(0), np.int64(0), np.int64(0)),
+    ])
+    def test___add___zero(self, key, arg1, arg2, arg3): self.__test___add__(key, arg1, arg2, arg3)
+
+    @pytest.mark.parametrize('key, arg1, arg2, arg3', [
+        ('int(0) + int(0)', 0, 0, 0),
+        ('int(1) + int(0)', 1, 0, 1),
+        ('int(0) + int(1)', 0, 1, 1),
+        ('int(1) + int(1)', 1, 1, 2),
+        ('int(123) + int(321)', 123, 321, 444),
+        ('int(-123) + int(321)', -123, 321, 198),
+        ('int(123) + int(-321)', 123, -321, -198),
+        ('int(-123) + int(-321)', -123, -321, -444),
+        ('int(1234567890) + int(1234567890)', 1234567890, 1234567890, 2469135780),
+        ('int(-1234567890) + int(1234567890)', -1234567890, 1234567890, 0),
+        ('int(1234567890) + int(-1234567890)', 1234567890, -1234567890, 0),
+        ('int(-1234567890) + int(-1234567890)', -1234567890, -1234567890, -2469135780),
+        ('int(1000000000) + int(1000000000)', 1000000000, 1000000000, 2000000000),
+        ('int(-1000000000) + int(1000000000)', -1000000000, 1000000000, 0),
+        ('int(1000000000) + int(-1000000000)', 1000000000, -1000000000, 0),
+        ('int(-1000000000) + int(-1000000000)', -1000000000, -1000000000, -2000000000),
+        ('int(1000000000000000000) + int(1000000000000000000)', 1000000000000000000, 1000000000000000000, 2000000000000000000),
+        ('int(-1000000000000000000) + int(1000000000000000000)', -1000000000000000000, 1000000000000000000, 0),
+        ('int(1000000000000000000) + int(-1000000000000000000)', 1000000000000000000, -1000000000000000000, 0),
+        ('int(-1000000000000000000) + int(-1000000000000000000)', -1000000000000000000, -1000000000000000000, -2000000000000000000),
+        ('int(123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890) + int(123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890)',
+         123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, 246913578024691357802469135780246913578024691357802469135780246913578024691357802469135780),
+        ('int(-123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890) + int(123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890)', -
+         123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, 0),
+        ('int(123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890) + int(-123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890)',
+         123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, -123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, 0),
+        ('int(-123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890) + int(-123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890)', -
+         123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, -123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, -246913578024691357802469135780246913578024691357802469135780246913578024691357802469135780),
+    ])
+    def test___add___int(self, key, arg1, arg2, arg3): self.__test___add__(key, arg1, arg2, arg3)
+
+
+class TestDecimalNumber___sub__:
+    """Test DecimalNumber.__sub__"""
+
+    def __test___sub__(self, key, arg1, arg2, arg3): assert DecimalNumber(arg1) - DecimalNumber(arg2) == DecimalNumber(arg3)
+
+    @pytest.mark.parametrize('key, arg1, arg2, arg3', [
+        ('int(0) - int(0)', 0, 0, 0),
+        ('float(0) - float(0)', 0.0, 0.0, 0.0),
+        ('np.int16(0) - np.int16(0)', np.int16(0), np.int16(0), np.int16(0)),
+        ('np.int32(0) - np.int32(0)', np.int32(0), np.int32(0), np.int32(0)),
+        ('np.int64(0) - np.int64(0)', np.int64(0), np.int64(0), np.int64(0)),
+    ])
+    def test___sub___zero(self, key, arg1, arg2, arg3): self.__test___sub__(key, arg1, arg2, arg3)
+
+    @pytest.mark.parametrize('key, arg1, arg2, arg3', [
+        ('int(0) - int(0)', 0, 0, 0),
+        ('int(1) - int(0)', 1, 0, 1),
+        ('int(0) - int(1)', 0, 1, -1),
+        ('int(1) - int(1)', 1, 1, 0),
+        ('int(123) - int(321)', 123, 321, -198),
+        ('int(-123) - int(321)', -123, 321, -444),
+        ('int(123) - int(-321)', 123, -321, 444),
+        ('int(-123) - int(-321)', -123, -321, 198),
+        ('int(1234567890) - int(1234567890)', 1234567890, 1234567890, 0),
+        ('int(-1234567890) - int(1234567890)', -1234567890, 1234567890, -2469135780),
+        ('int(1234567890) - int(-1234567890)', 1234567890, -1234567890, 2469135780),
+        ('int(-1234567890) - int(-1234567890)', -1234567890, -1234567890, 0),
+        ('int(1000000000) - int(1000000000)', 1000000000, 1000000000, 0),
+        ('int(-1000000000) - int(1000000000)', -1000000000, 1000000000, -2000000000),
+        ('int(1000000000) - int(-1000000000)', 1000000000, -1000000000, 2000000000),
+        ('int(-1000000000) - int(-1000000000)', -1000000000, -1000000000, 0),
+        ('int(1000000000000000000) - int(1000000000000000000)', 1000000000000000000, 1000000000000000000, 0),
+        ('int(-1000000000000000000) - int(1000000000000000000)', -1000000000000000000, 1000000000000000000, -2000000000000000000),
+        ('int(1000000000000000000) - int(-1000000000000000000)', 1000000000000000000, -1000000000000000000, 2000000000000000000),
+        ('int(-1000000000000000000) - int(-1000000000000000000)', -1000000000000000000, -1000000000000000000, 0),
+        ('int(123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890) - int(123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890)',
+         123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, 0),
+        ('int(-123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890) - int(123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890)', -
+         123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, -246913578024691357802469135780246913578024691357802469135780246913578024691357802469135780),
+        ('int(123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890) - int(-123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890)',
+         123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, -123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, 246913578024691357802469135780246913578024691357802469135780246913578024691357802469135780),
+        ('int(-123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890) - int(-123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890)', -
+         123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, -123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, 0),
+    ])
+    def test___sub___int(self, key, arg1, arg2, arg3): self.__test___sub__(key, arg1, arg2, arg3)
+
+
+class TestDecimalNumber___mul__:
+    """Test DecimalNumber.__mul__"""
+
+    def __test___mul__(self, key, arg1, arg2, arg3): assert DecimalNumber(arg1) * DecimalNumber(arg2) == DecimalNumber(arg3)
+
+    @pytest.mark.parametrize('key, arg1, arg2, arg3', [
+        ('int(0) * int(0)', 0, 0, 0),
+        ('float(0) * float(0)', 0.0, 0.0, 0.0),
+        ('np.int16(0) * np.int16(0)', np.int16(0), np.int16(0), np.int16(0)),
+        ('np.int32(0) * np.int32(0)', np.int32(0), np.int32(0), np.int32(0)),
+        ('np.int64(0) * np.int64(0)', np.int64(0), np.int64(0), np.int64(0)),
+    ])
+    def test___mul___zero(self, key, arg1, arg2, arg3): self.__test___mul__(key, arg1, arg2, arg3)
+
+    @pytest.mark.parametrize('key, arg1, arg2, arg3', [
+        ('int(0) * int(0)', 0, 0, 0),
+        ('int(1) * int(0)', 1, 0, 0),
+        ('int(0) * int(1)', 0, 1, 0),
+        ('int(1) * int(1)', 1, 1, 1),
+        ('int(123) * int(321)', 123, 321, 123 * 321),
+        ('int(-123) * int(321)', -123, 321, -123 * 321),
+        ('int(123) * int(-321)', 123, -321, 123 * -321),
+        ('int(-123) * int(-321)', -123, -321, -123 * -321),
+        ('int(1000000000000000000) * int(1000000000000000000)', 1000000000000000000, 1000000000000000000, 1000000000000000000 * 1000000000000000000),
+        ('int(-1000000000000000000) * int(1000000000000000000)', -1000000000000000000, 1000000000000000000, -1000000000000000000 * 1000000000000000000),
+        ('int(1000000000000000000) * int(-1000000000000000000)', 1000000000000000000, -1000000000000000000, 1000000000000000000 * -1000000000000000000),
+        ('int(-1000000000000000000) * int(-1000000000000000000)', -1000000000000000000, -1000000000000000000, -1000000000000000000 * -1000000000000000000),
+        ('int(123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890) * int(123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890)', 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890,
+         123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 * 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890),
+        ('int(-123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890) * int(123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890)', -123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890,
+         123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, -123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 * 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890),
+        ('int(123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890) * int(-123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890)', 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, -
+         123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 * -123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890),
+        ('int(-123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890) * int(-123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890)', -123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, -
+         123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890, -123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 * -123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890),
+    ])
+    def test___mul___int(self, key, arg1, arg2, arg3): self.__test___mul__(key, arg1, arg2, arg3)
+
+
+class TestDecimalNumber___truediv__:
+    """Test class for DecimalNumber.__truediv__"""
+
+    def __test___truediv__(self, key, arg1, arg2, arg3): assert DecimalNumber(arg1) / DecimalNumber(arg2) == DecimalNumber(arg3)
+
+    @pytest.mark.parametrize('key, arg1, arg2, arg3', [
+        ('int(0) / int(1)', 0, 1, 0),
+        ('float(0.0) / float(1.0)', 0.0, 1.0, 0.0),
+        ('np.int16(0) / np.int16(1)', np.int16(0), np.int16(1), np.int16(0)),
+        ('np.int32(0) / np.int32(1)', np.int32(0), np.int32(1), np.int32(0)),
+        ('np.int64(0) / np.int64(1)', np.int64(0), np.int64(1), np.int64(0)),
+    ])
+    def test___truediv___zero(self, key, arg1, arg2, arg3): self.__test___truediv__(key, arg1, arg2, arg3)
+
+    @pytest.mark.parametrize('key, arg1, arg2, arg3', [
+        ('int(1) / int(1)', 1, 1, 1 / 1),
+        ('int(1) / int(2)', 1, 2, 1 / 2),
+        ('int(2) / int(1)', 2, 1, 2 / 1),
+        ('int(1) / int(-1)', 1, -1, 1 / -1),
+        ('int(-1) / int(1)', -1, 1, -1 / 1),
+        ('int(-1) / int(-1)', -1, -1, -1 / -1),
+    ])
+    def test___truediv___int(self, key, arg1, arg2, arg3): self.__test___truediv__(key, arg1, arg2, arg3)
+
+    @pytest.mark.parametrize('key, arg1, arg2, expected_exception', [
+        ('int(1) / int(0)', 1, 0, ZeroDivisionError),
+        ('float(1.0) / float(0.0)', 1.0, 0.0, ZeroDivisionError),
+        ('np.int16(1) / np.int16(0)', np.int16(1), np.int16(0), ZeroDivisionError),
+        ('np.int32(1) / np.int32(0)', np.int32(1), np.int32(0), ZeroDivisionError),
+        ('np.int64(1) / np.int64(0)', np.int64(1), np.int64(0), ZeroDivisionError),
+    ])
+    def test___truediv___raise(self, key, arg1, arg2, expected_exception):
+        with pytest.raises(expected_exception): self.__test___truediv__(key, arg1, arg2, None)
+
+
+class TestDecimalNumber___floordiv__:
+    """Test class for DecimalNumber.__floordiv__"""
+
+    def __test___floordiv__(self, key, arg1, arg2, arg3): assert DecimalNumber(arg1) // DecimalNumber(arg2) == DecimalNumber(arg3)
+
+    @pytest.mark.parametrize('key, arg1, arg2, arg3', [
+        ('int(1) // int(1)', 1, 1, 1 // 1),
+        ('int(1) // int(2)', 1, 2, 1 // 2),
+        ('int(2) // int(1)', 2, 1, 2 // 1),
+        ('int(1) // int(-1)', 1, -1, 1 // -1),
+        ('int(-1) // int(1)', -1, 1, -1 // 1),
+        ('int(-1) // int(-1)', -1, -1, -1 // -1),
+    ])
+    def test___floordiv___int(self, key, arg1, arg2, arg3): self.__test___floordiv__(key, arg1, arg2, arg3)
+
+    @pytest.mark.parametrize('key, arg1, arg2, expected_exception', [
+        ('int(1) // int(0)', 1, 0, ZeroDivisionError),
+        ('float(1.0) // float(0.0)', 1.0, 0.0, ZeroDivisionError),
+        ('np.int16(1) // np.int16(0)', np.int16(1), np.int16(0), ZeroDivisionError),
+        ('np.int32(1) // np.int32(0)', np.int32(1), np.int32(0), ZeroDivisionError),
+        ('np.int64(1) // np.int64(0)', np.int64(1), np.int64(0), ZeroDivisionError),
+    ])
+    def test___floordiv___raise(self, key, arg1, arg2, expected_exception):
+        with pytest.raises(expected_exception): self.__test___floordiv__(key, arg1, arg2, None)
+
+
+class TestDecimalNumber___mod__:
+    """Test class for Decimal.__mod__"""
+
+    def __test___mod__(self, key, arg1, arg2, arg3): assert DecimalNumber(arg1) % DecimalNumber(arg2) == DecimalNumber(arg3)
+
+    @pytest.mark.parametrize('key, arg1, arg2, arg3', [
+        ('int(1) % int(1)', 1, 1, 1 % 1),
+        ('int(1) % int(2)', 1, 2, 1 % 2),
+        ('int(2) % int(1)', 2, 1, 2 % 1),
+        ('int(1) % int(-1)', 1, -1, 1 % -1),
+        ('int(-1) % int(1)', -1, 1, -1 % 1),
+        ('int(-1) % int(-1)', -1, -1, -1 % -1),
+    ])
+    def test___mod___int(self, key, arg1, arg2, arg3): self.__test___mod__(key, arg1, arg2, arg3)
+
+    @pytest.mark.parametrize('key, arg1, arg2, expected_exception', [
+        ('int(1) % int(0)', 1, 0, ZeroDivisionError),
+        ('float(1.0) % float(0.0)', 1.0, 0.0, ZeroDivisionError),
+        ('np.int16(1) % np.int16(0)', np.int16(1), np.int16(0), ZeroDivisionError),
+        ('np.int32(1) % np.int32(0)', np.int32(1), np.int32(0), ZeroDivisionError),
+        ('np.int64(1) % np.int64(0)', np.int64(1), np.int64(0), ZeroDivisionError),
+    ])
+    def test___mod___raise(self, key, arg1, arg2, expected_exception):
+        with pytest.raises(expected_exception): self.__test___mod__(key, arg1, arg2, None)
+
+
+class TestDecimalNumber___pow__:
+    """Test class for DecimalNumber.__pow__"""
+
+    def __test___pow__(self, key, arg1, arg2, arg3): assert DecimalNumber(arg1) ** DecimalNumber(arg2) == DecimalNumber(arg3)
+
+    @pytest.mark.parametrize('key, arg1, arg2, arg3', [
+        ('int(1) ** int(1)', 1, 1, 1 ** 1),
+        ('int(1) ** int(2)', 1, 2, 1 ** 2),
+        ('int(2) ** int(1)', 2, 1, 2 ** 1),
+        ('int(1) ** int(-1)', 1, -1, 1 ** -1),
+        ('int(-1) ** int(1)', -1, 1, -1 ** 1),
+        ('int(-1) ** int(-1)', -1, -1, -1 ** -1),
+    ])
+    def test___pow___int(self, key, arg1, arg2, arg3): self.__test___pow__(key, arg1, arg2, arg3)
+
+
+class TestDecimalNumber___int__:
+    """Test class for DecimalNumber.__int__"""
+
+    def __test___int__(self, key, arg1, arg2): assert int(DecimalNumber(arg1)) == arg2
+
+    @pytest.mark.parametrize('key, arg1, arg2', [
+        ('int(1)', 1, 1),
+        ('int(2)', 2, 2),
+        ('int(-1)', -1, -1),
+    ])
+    def test___int___int(self, key, arg1, arg2): self.__test___int__(key, arg1, arg2)
+
+    @pytest.mark.parametrize('key, arg1, arg2', [
+        ('float(0)', 0.0, 0),
+        ('float(1)', 1.0, 1),
+        ('float(-1)', -1.0, -1),
+        ('float(123)', 123.0, 123),
+        ('float(-123)', -123.0, -123),
+        ('float(12.3)', 12.3, 12),
+        ('float(-12.3)', -12.3, -12),
+        ('float(12345.67890)', 12345.67890, 12345),
+        ('float(-12345.67890)', -12345.67890, -12345),
+    ])
+    def test___int___float(self, key, arg1, arg2): self.__test___int__(key, arg1, arg2)
