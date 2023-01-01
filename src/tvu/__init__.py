@@ -13,4 +13,5 @@ StandardWithUncertainty
     Provides a class that represents a typical value with uncertainty.
 """
 
-from .decimal.decimal_number import DecimalNumber
+from .decimal_value import DecimalNumber
+from .decimal_value import Deci  # alias

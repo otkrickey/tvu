@@ -1,43 +1,7 @@
 import random
 import pytest
 import numpy as np
-from tvu.decimal import DecimalNumber
-
-# case_keys: str
-case_keys = [
-    '12', '0', '-12',
-    '1.2', '0.0', '-1.2',
-    'np.int16(12)', 'np.int16(0)', 'np.int16(-12)',
-    'np.int32(12)', 'np.int32(0)', 'np.int32(-12)',
-    'np.int64(12)', 'np.int64(0)', 'np.int64(-12)']
-# case_args: int | float | np.int16 | np.int32 | np.int64
-case_args = [
-    12, 0, -12,
-    1.2, 0.0, -1.2,
-    np.int16(12), np.int16(0), np.int16(-12),
-    np.int32(12), np.int32(0), np.int32(-12),
-    np.int64(12), np.int64(0), np.int64(-12)]
-# case_params: (s:int, x:int, e:int)
-case_params = [
-    (1, 12, 0), (0, 0, 0), (-1, 12, 0),
-    (1, 12, -1), (0, 0, 0), (-1, 12, -1),
-    (1, 12, 0), (0, 0, 0), (-1, 12, 0),
-    (1, 12, 0), (0, 0, 0), (-1, 12, 0),
-    (1, 12, 0), (0, 0, 0), (-1, 12, 0),]
-# case_div_by_2: int | float | np.int16 | np.int32 | np.int64
-case_div_by_2 = [
-    6, 0, -6,
-    0.6, 0, -0.6,
-    np.int16(6), np.int16(0), np.int16(-6),
-    np.int32(6), np.int32(0), np.int32(-6),
-    np.int64(6), np.int64(0), np.int64(-6)]
-# case_repr: str
-case_repr = [
-    'DecimalNumber(12e0)', 'DecimalNumber(0e0)', 'DecimalNumber(-12e0)',
-    'DecimalNumber(12e-1)', 'DecimalNumber(0e0)', 'DecimalNumber(-12e-1)',
-    'DecimalNumber(12e0)', 'DecimalNumber(0e0)', 'DecimalNumber(-12e0)',
-    'DecimalNumber(12e0)', 'DecimalNumber(0e0)', 'DecimalNumber(-12e0)',
-    'DecimalNumber(12e0)', 'DecimalNumber(0e0)', 'DecimalNumber(-12e0)']
+from tvu.decimal_value import Deci
 
 
 class TestDecimalNumber_constructor:
@@ -45,7 +9,7 @@ class TestDecimalNumber_constructor:
 
     def __test___init__(self, key, arg, params, _str_, _repr_):
         s, x, e = params
-        dn = DecimalNumber(arg)
+        dn = Deci(arg)
         assert dn.s == s
         assert dn.x == x
         assert dn.e == e
@@ -112,13 +76,13 @@ class TestDecimalNumber_constructor:
         ('np.float64(1.2)', np.float64(1.2), TypeError),
     ])
     def test___init___raise(self, key, invalid_arg, expected_exception):
-        with pytest.raises(expected_exception): DecimalNumber(invalid_arg)
+        with pytest.raises(expected_exception): Deci(invalid_arg)
 
 
 class TestDecimalNumber___eq__:
     """Test DecimalNumber.__eq__()."""
 
-    def __test___eq__(self, key, arg): assert DecimalNumber(arg) == DecimalNumber(arg)
+    def __test___eq__(self, key, arg): assert Deci(arg) == Deci(arg)
 
     @pytest.mark.parametrize('key, arg', [
         ('int(0)', 0),
@@ -163,7 +127,7 @@ class TestDecimalNumber___eq__:
 class TestDecimalNumber___ne__:
     """Test DecimalNumber.__ne__()."""
 
-    def __test___ne__(self, key, arg1, arg2): assert DecimalNumber(arg1) != DecimalNumber(arg2)
+    def __test___ne__(self, key, arg1, arg2): assert Deci(arg1) != Deci(arg2)
 
     @pytest.mark.parametrize('key, arg1, arg2', [
         ('int(0)', 0, 1),
@@ -208,7 +172,7 @@ class TestDecimalNumber___ne__:
 class TestDecimalNumber___lt__:
     """Test DecimalNumber.__lt__()."""
 
-    def __test___lt__(self, key, arg1, arg2): assert DecimalNumber(arg1) < DecimalNumber(arg2)
+    def __test___lt__(self, key, arg1, arg2): assert Deci(arg1) < Deci(arg2)
 
     @pytest.mark.parametrize('key, arg1, arg2', [
         ('int(0)', 0, 1),
@@ -253,7 +217,7 @@ class TestDecimalNumber___lt__:
 class TestDecimalNumber___le__:
     """Test DecimalNumber.__le__()."""
 
-    def __test___le__(self, key, arg1, arg2): assert DecimalNumber(arg1) <= DecimalNumber(arg2)
+    def __test___le__(self, key, arg1, arg2): assert Deci(arg1) <= Deci(arg2)
 
     @pytest.mark.parametrize('key, arg1, arg2', [
         ('int(0)', 0, 1),
@@ -298,7 +262,7 @@ class TestDecimalNumber___le__:
 class TestDecimalNumber___gt__:
     """Test DecimalNumber.__gt__()."""
 
-    def __test___gt__(self, key, arg1, arg2): assert DecimalNumber(arg1) > DecimalNumber(arg2)
+    def __test___gt__(self, key, arg1, arg2): assert Deci(arg1) > Deci(arg2)
 
     @pytest.mark.parametrize('key, arg1, arg2', [
         ('int(0)', 0, 1),
@@ -343,7 +307,7 @@ class TestDecimalNumber___gt__:
 class TestDecimalNumber___ge__:
     """Test DecimalNumber.__ge__()."""
 
-    def __test___ge__(self, key, arg1, arg2): assert DecimalNumber(arg1) >= DecimalNumber(arg2)
+    def __test___ge__(self, key, arg1, arg2): assert Deci(arg1) >= Deci(arg2)
 
     @pytest.mark.parametrize('key, arg1, arg2', [
         ('int(0)', 0, 1),
@@ -388,7 +352,7 @@ class TestDecimalNumber___ge__:
 class TestDecimalNumber___abs__:
     """Test DecimalNumber.__abs__()."""
 
-    def __test___abs__(self, key, arg1, arg2): assert abs(DecimalNumber(arg1)) == abs(DecimalNumber(arg2))
+    def __test___abs__(self, key, arg1, arg2): assert abs(Deci(arg1)) == abs(Deci(arg2))
 
     @pytest.mark.parametrize('key, arg1, arg2', [
         ('int(0)', 0, -0),
@@ -433,7 +397,7 @@ class TestDecimalNumber___abs__:
 class TestDecimalNumber___add__:
     """Test DecimalNumber.__add__()."""
 
-    def __test___add__(self, key, arg1, arg2, arg3): assert DecimalNumber(arg1) + DecimalNumber(arg2) == DecimalNumber(arg3)
+    def __test___add__(self, key, arg1, arg2, arg3): assert Deci(arg1) + Deci(arg2) == Deci(arg3)
 
     @pytest.mark.parametrize('key, arg1, arg2, arg3', [
         ('int(0) + int(0)', 0, 0, 0),
@@ -480,7 +444,7 @@ class TestDecimalNumber___add__:
 class TestDecimalNumber___sub__:
     """Test DecimalNumber.__sub__"""
 
-    def __test___sub__(self, key, arg1, arg2, arg3): assert DecimalNumber(arg1) - DecimalNumber(arg2) == DecimalNumber(arg3)
+    def __test___sub__(self, key, arg1, arg2, arg3): assert Deci(arg1) - Deci(arg2) == Deci(arg3)
 
     @pytest.mark.parametrize('key, arg1, arg2, arg3', [
         ('int(0) - int(0)', 0, 0, 0),
@@ -527,7 +491,7 @@ class TestDecimalNumber___sub__:
 class TestDecimalNumber___mul__:
     """Test DecimalNumber.__mul__"""
 
-    def __test___mul__(self, key, arg1, arg2, arg3): assert DecimalNumber(arg1) * DecimalNumber(arg2) == DecimalNumber(arg3)
+    def __test___mul__(self, key, arg1, arg2, arg3): assert Deci(arg1) * Deci(arg2) == Deci(arg3)
 
     @pytest.mark.parametrize('key, arg1, arg2, arg3', [
         ('int(0) * int(0)', 0, 0, 0),
@@ -566,7 +530,7 @@ class TestDecimalNumber___mul__:
 class TestDecimalNumber___truediv__:
     """Test class for DecimalNumber.__truediv__"""
 
-    def __test___truediv__(self, key, arg1, arg2, arg3): assert DecimalNumber(arg1) / DecimalNumber(arg2) == DecimalNumber(arg3)
+    def __test___truediv__(self, key, arg1, arg2, arg3): assert Deci(arg1) / Deci(arg2) == Deci(arg3)
 
     @pytest.mark.parametrize('key, arg1, arg2, arg3', [
         ('int(0) / int(1)', 0, 1, 0),
@@ -601,7 +565,7 @@ class TestDecimalNumber___truediv__:
 class TestDecimalNumber___floordiv__:
     """Test class for DecimalNumber.__floordiv__"""
 
-    def __test___floordiv__(self, key, arg1, arg2, arg3): assert DecimalNumber(arg1) // DecimalNumber(arg2) == DecimalNumber(arg3)
+    def __test___floordiv__(self, key, arg1, arg2, arg3): assert Deci(arg1) // Deci(arg2) == Deci(arg3)
 
     @pytest.mark.parametrize('key, arg1, arg2, arg3', [
         ('int(1) // int(1)', 1, 1, 1 // 1),
@@ -627,7 +591,7 @@ class TestDecimalNumber___floordiv__:
 class TestDecimalNumber___mod__:
     """Test class for Decimal.__mod__"""
 
-    def __test___mod__(self, key, arg1, arg2, arg3): assert DecimalNumber(arg1) % DecimalNumber(arg2) == DecimalNumber(arg3)
+    def __test___mod__(self, key, arg1, arg2, arg3): assert Deci(arg1) % Deci(arg2) == Deci(arg3)
 
     @pytest.mark.parametrize('key, arg1, arg2, arg3', [
         ('int(1) % int(1)', 1, 1, 1 % 1),
@@ -653,7 +617,7 @@ class TestDecimalNumber___mod__:
 class TestDecimalNumber___pow__:
     """Test class for DecimalNumber.__pow__"""
 
-    def __test___pow__(self, key, arg1, arg2, arg3): assert DecimalNumber(arg1) ** DecimalNumber(arg2) == DecimalNumber(arg3)
+    def __test___pow__(self, key, arg1, arg2, arg3): assert Deci(arg1) ** Deci(arg2) == Deci(arg3)
 
     @pytest.mark.parametrize('key, arg1, arg2, arg3', [
         ('int(1) ** int(1)', 1, 1, 1 ** 1),
@@ -669,7 +633,7 @@ class TestDecimalNumber___pow__:
 class TestDecimalNumber___int__:
     """Test class for DecimalNumber.__int__"""
 
-    def __test___int__(self, key, arg1, arg2): assert int(DecimalNumber(arg1)) == arg2
+    def __test___int__(self, key, arg1, arg2): assert int(Deci(arg1)) == arg2
 
     @pytest.mark.parametrize('key, arg1, arg2', [
         ('int(1)', 1, 1),
