@@ -142,7 +142,7 @@ class DecimalNumber:
 
     def __truediv__(self, other) -> 'DecimalNumber':
         other = DecimalNumber(other)
-        return DecimalNumber(int(self.s * self.x / (other.s * other.x)), self.e - other.e)
+        return DecimalNumber(self.s * self.x / (other.s * other.x), self.e - other.e)
 
     def __floordiv__(self, other) -> 'DecimalNumber':
         other = DecimalNumber(other)
@@ -250,7 +250,7 @@ class DecimalNumber:
         elif self.e == 0:
             return self.s * self.x
         else:
-            return self.s * int(str(self.x)[:-self.e])
+            return self.s * int(str(self.x)[:self.e])
 
     def __float__(self) -> float:
         return float(self.s * self.x * 10 ** self.e)
