@@ -14,4 +14,6 @@ StandardWithUncertainty
 """
 
 from .decimal_value import DecimalNumber
-from .decimal_value import Deci  # alias
+from .decimal_value import Dn  # alias
+from .typical_value import TypicalValueWithUncertainty
+from .typical_value import Tvu  # alias
